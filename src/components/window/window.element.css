@@ -1,0 +1,182 @@
+:host {
+    display: block;
+    --border-color: #eeeeee;
+    --frame-bg: #ffffff;
+    --zindex: auto;
+}
+
+:host > .window {
+    position: absolute;
+    display: inline-grid;
+    grid-template: .3em auto 1fr .3em / .3em auto .3em;
+    transform: translate(var(--window-position-x), var(--window-position-y));
+    width: var(--window-size-w);
+    height: var(--window-size-h);
+    z-index: var(--zindex);
+
+}
+
+
+:host > .window[maximized] {
+    transform: none;
+    grid-template: 0 auto 1fr 0 / 0 auto 0;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: auto;
+    height: auto;
+}
+
+:host > .window[minimized] {
+    animation-duration: 200ms;
+    animation-name: minimizeWindow;
+    animation-fill-mode: forwards;
+}
+
+:host > .window:not([maximized]):not([minimized]) {
+    animation-duration: 200ms;
+    animation-name: restoreMinimizedWindow;
+    animation-fill-mode: forwards;
+}
+
+@keyframes restoreMinimizedWindow {
+    from {
+        display: inline-grid;
+        transform: translate(var(--window-position-x), var(--window-position-y)) scale(.7);
+        opacity: 0;
+    }
+    
+    to {
+        transform: translate(var(--window-position-x), var(--window-position-y));
+        opacity: 1;
+    }
+  }
+
+  
+  @keyframes minimizeWindow {
+    from {
+        transform: translate(var(--window-position-x), var(--window-position-y));
+        opacity: 1;
+    }
+
+    100%{
+        position: fixed;
+        z-index: -5;
+      }
+    
+    to {
+        transform: translate(var(--window-position-x), var(--window-position-y)) scale(.7);
+        opacity: 0;
+    }
+  }
+
+.window__top-bar {
+    grid-column: 2 / span 1;
+    grid-row: 2 / span 1;
+    background: var(--border-color);
+    display: flex;
+}
+
+
+.window__top-bar:active {
+    cursor: move;
+}
+
+.window[maximized] > .window__top-bar:active {
+    cursor: default;
+}
+
+.window__main-frame {
+    background: var(--frame-bg);
+    grid-column: 2 / span 1;
+    grid-row: 3 / span 1;
+    display: block;
+    place-self: stretch;
+    overflow: hidden;
+}
+.window__title {
+    pointer-events: none;
+    flex: 1;
+}
+
+.button {
+    border-radius: 50%;
+    width: 1em;
+    height: 1em;
+    margin: 0.1em;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.button--close {
+    background: red;
+}
+
+
+.button--maximize {
+    background: green;
+}
+
+
+.button--minimize {
+    background: blue;
+}
+
+
+.border {
+    background: var(--border-color);
+    place-self: stretch;
+}
+
+.border--left,.border--right {
+    grid-row: 2 / span 2;
+    cursor: ew-resize;
+}
+
+.border--left {
+    grid-column: 1 / span 1;
+}
+
+.border--right {
+    grid-column: -2 / span 1;
+}
+
+.border--top,.border--bottom {
+    grid-column: 2 / span 1;
+    cursor: ns-resize;
+}
+
+.border--top {
+    grid-row: 1 / span 1;
+}
+
+.border--bottom {
+    grid-row: -2 / span 1;
+}
+
+.border--top-left {
+    grid-area: 1 / 1 / span 1 / span 1;
+    cursor: nw-resize;
+    border-top-left-radius: 50%;
+}
+
+.border--top-right {
+    grid-area: 1 / -2 / span 1 / span 1;
+    cursor: ne-resize;
+    border-top-right-radius: 50%;
+}
+
+.border--bottom-left {
+    grid-area: -2 / 1 / span 1 / span 1;
+    cursor: sw-resize;
+    border-bottom-left-radius: 50%;
+}
+
+.border--bottom-right {
+    grid-area: -2 / -2 / span 1 / span 1;
+    cursor: se-resize;
+    border-bottom-right-radius: 50%;
+}
+
+
